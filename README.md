@@ -600,3 +600,7 @@ The application has the following services:
 
     Step-by-Step Tutorial: Installing Docker and Docker Compose on Ubuntu
     https://tomerklein.dev/step-by-step-tutorial-installing-docker-and-docker-compose-on-ubuntu-a98a1b7aaed0
+
+
+
+kubectl port-forward service/store-front 8080:80
