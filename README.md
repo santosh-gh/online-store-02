@@ -1,9 +1,9 @@
-# Dockerize Microservices and run Minikube Cluster
+# Dockerize Microservices and run in Minikube Cluster
   #### 1. Docker Desktop
   #### 2. Dockerfile
-  #### 3. Docker Image
-  #### 4. kubectl
-  #### 5. Docker Hub
+  #### 3. Docker Image  
+  #### 4. Docker Hub
+  #### 5. kubectl
 
   GitRepo: https://github.com/santosh-gh/online-store-02
 
@@ -34,9 +34,14 @@ The application has the following services:
 
 ![Logical Application Architecture Diagram](assets/store-architecture.png)
 
+
+# Install kubectl
+
+    https://kubernetes.io/docs/tasks/tools/
+
 # Install Minikube
 
-  https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download
+    https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download
 
 # Minikube commands
 
@@ -183,31 +188,32 @@ The application has the following services:
 
 # Build Images
 
-  docker build -t order-service src/order-service
-  docker build -t product-service src/product-service
-  docker build -t store-front src/store-front
+    docker build -t order-service src/order-service
+    docker build -t product-service src/product-service
+    docker build -t store-front src/store-front
 
   docker images
 
 # Tag Images
 
-  docker tag order:latest e880613/order:1.0.0
-  docker tag product:latest e880613/product:1.0.0
-  docker tag store-front:latest e880613/store-front:1.0.0
+    docker tag order:latest e880613/order:1.0.0
+    docker tag product:latest e880613/product:1.0.0
+    docker tag store-front:latest e880613/store-front:1.0.0
 
 # login
 
-  docker login docker.io -u <username> -p <password>
+    docker login docker.io -u <username> -p <password>
 
 # Push to docker hub
 
-  docker push e880613/order:1.0.0
-  docker push e880613/product:1.0.0
-  docker push e880613/store-front:1.0.0
+    docker push e880613/order:1.0.0
+    docker push e880613/product:1.0.0
+    docker push e880613/store-front:1.0.0
 
 # Port Forward
-  kubectl port-forward service/store-front 8080:80
 
-  minikube service <service-name>
+    kubectl port-forward service/store-front 8080:80
+
+    minikube service <service-name>
 
 
