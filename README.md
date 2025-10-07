@@ -172,19 +172,19 @@ The application has the following services:
     Clean up Docker images/containers (if using Docker driver).
     docker system prune -a
 
-# Popular addons:
+# Addons:
 
-  dashboard – Kubernetes Dashboard
+    dashboard – Kubernetes Dashboard
 
-  metrics-server – Metrics for HPA
+    metrics-server – Metrics for HPA
 
-  ingress – NGINX Ingress controller
+    ingress – NGINX Ingress controller
 
-  registry – Local Docker registry
+    registry – Local Docker registry
 
-  registry-creds – Credential helper for registries
+    registry-creds – Credential helper for registries
 
-  storage-provisioner – Dynamic volume provisioning
+    storage-provisioner – Dynamic volume provisioning
 
 # Build Images
 
