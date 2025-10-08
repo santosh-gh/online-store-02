@@ -473,6 +473,17 @@ The application has the following services:
 
       kubectl apply -f ./manifests/store-front -n dev
 
+  ## Port Forward
+
+      kubectl port-forward service/store-front 8080:80
+
+      minikube service store-front
+
+  ## Clean up
+
+      kubectl delete all -all
+
+      or
 
       kubectl delete -f ./manifests/config -n dev
 
@@ -483,14 +494,3 @@ The application has the following services:
       kubectl delete -f ./manifests/product -n dev 
 
       kubectl delete -f ./manifests/store-front -n dev
-
-
-  ## Port Forward
-
-      kubectl port-forward service/store-front 8080:80
-
-      minikube service store-front
-
-  ## Clean up
-
-      kubectl delete all -all
