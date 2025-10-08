@@ -306,7 +306,7 @@ The application has the following services:
     docker push e880613/product-service:1.0.0
     docker push e880613/store-front:1.0.0
 
-# Premitive Deployment
+# Imperative Deployment
  
     
   ## Config
@@ -368,7 +368,6 @@ The application has the following services:
       --port=5672 --target-port=5672 \
       --port=15672 --target-port=15672
 
-
   ## Order  
 
     - Deployment
@@ -383,7 +382,6 @@ The application has the following services:
       --target-port=3000 \
       --name=order-service \
       --type=ClusterIP
-
 
   ## Product
 
@@ -415,11 +413,52 @@ The application has the following services:
       --name=store-front \
       --type=LoadBalancer
 
+  ## Port Forward
 
-# Port Forward
+      kubectl port-forward service/store-front 8080:80
 
-    kubectl port-forward service/store-front 8080:80
+      minikube service store-front
 
-    minikube service <service-name>
+  ## Clean up
 
+      kubectl delete all -all 
 
+# Declarative Deployment
+
+  ## Create Manifests files
+
+      config.yaml
+
+      rabbit-deployment.yaml
+      rabbit-service.yaml    
+
+      order-deployment.yaml
+      order-service.yaml
+
+      product-deployment.yaml
+      product-service.yaml
+
+      store-front-deployment.yaml
+      store-front-service.yaml
+
+  ## Deploy    
+
+      kubectl apply -f ./manifests/config
+
+      kubectl apply -f ./manifests/rabbitmq
+
+      kubectl apply -f ./manifests/order
+
+      kubectl apply -f ./manifests/product
+
+      kubectl apply -f ./manifests/store-front
+
+  ## Port Forward
+
+      kubectl port-forward service/store-front 8080:80
+
+      minikube service store-front
+
+  ## Clean up
+
+      kubectl delete all -all
