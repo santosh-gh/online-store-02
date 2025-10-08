@@ -4,6 +4,7 @@
   #### 3. Docker Image  
   #### 4. Docker Hub
   #### 5. kubectl
+  #### 6. minikube
 
   GitRepo: https://github.com/santosh-gh/online-store-02
 
@@ -38,6 +39,88 @@ The application has the following services:
 # Install kubectl
 
     https://kubernetes.io/docs/tasks/tools/
+
+# Kubectl Commands
+
+  ## Version / Help	
+    Show version info
+    kubectl version
+    
+    Show help for all commands
+	  kubectl help	
+
+  ## Cluster Info	
+    Display cluster details
+    kubectl cluster-info	
+
+    List all cluster nodes
+	  kubectl get nodes	
+
+    List all pods in current namespace
+	  kubectl get pods	
+
+  ## Deployment	
+    Apply configuration from a YAML file
+    kubectl apply -f file.yaml	
+
+    Create a deployment
+	  kubectl create deployment <name> --image=<image>	
+
+    Delete a pod
+	  kubectl delete pod <name>	
+
+  ## Services	
+    List services
+    kubectl get services	
+
+    Expose a deployment
+	  kubectl expose deployment <name> --type=LoadBalancer --port=80	
+
+  ## Scaling	
+    Scale a deployment
+    kubectl scale deployment <name>	 --replicas=3	
+
+  ## Logs	
+    Show logs of a pod
+    kubectl logs <pod-name>		
+
+    Stream logs (follow mode)
+	  kubectl logs  <pod-name> -f	
+
+  ## Exec / Debug	
+
+    Open shell inside a pod
+    kubectl exec -it  <pod-name> -- /bin/bash	
+    Show detailed pod info
+	  kubectl describe pod  <pod-name>	
+
+  ## Namespaces	
+   List namespaces
+   kubectl get namespaces	
+
+   Set current namespace
+   kubectl config set-context --current --namespace=<namespace>	
+
+  ## Config
+
+   Show kubeconfig
+   kubectl config view	
+
+   Switch context
+	 kubectl config use-context <context>
+
+  ## Apply / Delete Resources	
+   
+   Create or update resources
+   kubectl apply -f file.yaml	
+
+   Delete resources from file
+	 kubectl delete -f file.yaml	
+
+  ## Port Forwarding	
+
+   Forward local port to pod
+   kubectl port-forward <pod-name> 8080:80	  
 
 # Install Minikube
 
@@ -186,6 +269,10 @@ The application has the following services:
 
     storage-provisioner – Dynamic volume provisioning
 
+# Crete minikube cluster
+
+    minikube start
+
 # Build Images
 
     docker build -t order-service src/order-service
@@ -196,8 +283,8 @@ The application has the following services:
 
 # Tag Images
 
-    docker tag order:latest e880613/order:1.0.0
-    docker tag product:latest e880613/product:1.0.0
+    docker tag order-service:latest e880613/order-service:1.0.0
+    docker tag product-service:latest e880613/product-service:1.0.0
     docker tag store-front:latest e880613/store-front:1.0.0
 
 # login
@@ -206,9 +293,119 @@ The application has the following services:
 
 # Push to docker hub
 
-    docker push e880613/order:1.0.0
-    docker push e880613/product:1.0.0
+    docker push e880613/order-service:1.0.0
+    docker push e880613/product-service:1.0.0
     docker push e880613/store-front:1.0.0
+
+# Premitive Deployment
+ 
+    
+  ## Config
+
+      kubectl create configmap rabbitmq-enabled-plugins \
+      --from-literal=rabbitmq_enabled_plugins="[rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0]."    
+
+  ## Rabbitmq
+
+    - Deployment
+
+      kubectl create deployment rabbitmq \
+      --image=mcr.microsoft.com/azurelinux/base/rabbitmq-server:3.13 \
+      --replicas=1
+
+      kubectl set env deployment/rabbitmq \
+      RABBITMQ_DEFAULT_USER=username \
+      RABBITMQ_DEFAULT_PASS=password
+
+      kubectl set resources deployment/rabbitmq \
+      --requests=cpu=10m,memory=128Mi \
+      --limits=cpu=250m,memory=256Mi
+
+      # Add ports
+        kubectl patch deployment rabbitmq --type='json' -p='[
+          {"op": "add", "path": "/spec/template/spec/containers/0/ports", "value": [
+            {"containerPort": 5672, "name": "rabbitmq-amqp"},
+            {"containerPort": 15672, "name": "rabbitmq-http"}
+          ]}
+        ]'
+
+      # Add nodeSelector
+      kubectl patch deployment rabbitmq --type='json' -p='[
+        {"op": "add", "path": "/spec/template/spec/nodeSelector", "value": {"kubernetes.io/os": "linux"}}
+      ]'
+
+      # Add volume and mount
+      kubectl patch deployment rabbitmq --type='json' -p='[
+        {"op": "add", "path": "/spec/template/spec/volumes", "value": [
+          {
+            "name": "rabbitmq-enabled-plugins",
+            "configMap": {
+              "name": "rabbitmq-enabled-plugins",
+              "items": [{"key": "rabbitmq_enabled_plugins", "path": "enabled_plugins"}]
+            }
+          }
+        ]},
+        {"op": "add", "path": "/spec/template/spec/containers/0/volumeMounts", "value": [
+          {"name": "rabbitmq-enabled-plugins", "mountPath": "/etc/rabbitmq/enabled_plugins", "subPath": "enabled_plugins"}
+        ]}
+      ]'
+
+
+    - Service
+
+      kubectl expose deployment rabbitmq \
+      --name=rabbitmq \
+      --type=ClusterIP \
+      --port=5672 --target-port=5672 \
+      --port=15672 --target-port=15672
+
+
+  ## Order  
+
+    - Deployment
+
+      kubectl create deployment order --image=e880613/order:1.0.0 \
+      --replicas=1
+
+    - Service
+
+      kubectl expose deployment order \
+      --port=3000 \
+      --target-port=3000 \
+      --name=order-service \
+      --type=ClusterIP
+
+
+  ## Product
+
+    - Deployment
+
+      kubectl create deployment product --image=e880613/product:1.0.0 \
+      --replicas=1
+
+    - Service
+
+      kubectl expose deployment product \
+      --port=3002 \
+      --target-port=3002 \
+      --name=product-service \
+      --type=ClusterIP
+
+  ## Store-front
+
+    - Deployment
+
+      kubectl create deployment store-front --image=e880613/store-front:1.0.0 \
+      --replicas=1
+
+    - Service
+
+      kubectl expose deployment store-front \
+      --port=80 \
+      --target-port=8080 \
+      --name=store-front \
+      --type=LoadBalancer
+
 
 # Port Forward
 

@@ -45,3 +45,8 @@ spec:
             items:
               - key: rabbitmq_enabled_plugins
                 path: enabled_plugins
+
+
+
+
+
