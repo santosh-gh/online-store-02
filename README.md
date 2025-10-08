@@ -43,6 +43,7 @@ The application has the following services:
 # Kubectl Commands
 
   ## Version / Help	
+
     Show version info
     kubectl version
     
@@ -50,26 +51,29 @@ The application has the following services:
 	  kubectl help	
 
   ## Cluster Info	
+
     Display cluster details
-    kubectl cluster-info	
+    kubectl cluster-info
 
     List all cluster nodes
-	  kubectl get nodes	
+	  kubectl get nodes
 
     List all pods in current namespace
-	  kubectl get pods	
+	  kubectl get pods
 
   ## Deployment	
+
     Apply configuration from a YAML file
-    kubectl apply -f file.yaml	
+    kubectl apply -f file.yaml
 
     Create a deployment
-	  kubectl create deployment <name> --image=<image>	
+	  kubectl create deployment <name> --image=<image>
 
     Delete a pod
 	  kubectl delete pod <name>	
 
   ## Services	
+
     List services
     kubectl get services	
 
@@ -77,10 +81,12 @@ The application has the following services:
 	  kubectl expose deployment <name> --type=LoadBalancer --port=80	
 
   ## Scaling	
+
     Scale a deployment
     kubectl scale deployment <name>	 --replicas=3	
 
   ## Logs	
+
     Show logs of a pod
     kubectl logs <pod-name>		
 
@@ -90,37 +96,39 @@ The application has the following services:
   ## Exec / Debug	
 
     Open shell inside a pod
-    kubectl exec -it  <pod-name> -- /bin/bash	
+    kubectl exec -it  <pod-name> -- /bin/bash
+
     Show detailed pod info
 	  kubectl describe pod  <pod-name>	
 
   ## Namespaces	
-   List namespaces
-   kubectl get namespaces	
 
-   Set current namespace
-   kubectl config set-context --current --namespace=<namespace>	
+    List namespaces
+    kubectl get namespaces	
+
+    Set current namespace
+    kubectl config set-context --current --namespace=<namespace>	
 
   ## Config
 
-   Show kubeconfig
-   kubectl config view	
+    Show kubeconfig
+    kubectl config view	
 
-   Switch context
-	 kubectl config use-context <context>
+    Switch context
+    kubectl config use-context <context>
 
   ## Apply / Delete Resources	
    
-   Create or update resources
-   kubectl apply -f file.yaml	
+    Create or update resources
+    kubectl apply -f file.yaml	
 
-   Delete resources from file
-	 kubectl delete -f file.yaml	
+    Delete resources from file
+    kubectl delete -f file.yaml	
 
   ## Port Forwarding	
 
-   Forward local port to pod
-   kubectl port-forward <pod-name> 8080:80	  
+    Forward local port to pod
+    kubectl port-forward <pod-name> 8080:80	  
 
 # Install Minikube
 
@@ -129,6 +137,7 @@ The application has the following services:
 # Minikube commands
 
   ## Version & Info
+
     Show Minikube version.
     minikube version	
 
@@ -302,8 +311,8 @@ The application has the following services:
     
   ## Config
 
-      kubectl create configmap rabbitmq-enabled-plugins \
-      --from-literal=rabbitmq_enabled_plugins="[rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0]."    
+    kubectl create configmap rabbitmq-enabled-plugins \
+    --from-literal=rabbitmq_enabled_plugins="[rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0]."    
 
   ## Rabbitmq
 
