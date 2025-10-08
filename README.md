@@ -1,6 +1,6 @@
 # Microservices Deployment - 02
 
-  Dockerize Microservices and run in Minikube Cluster
+  ### Dockerize Microservices and run in Minikube Cluster
 
   #### 1. Docker Desktop
   #### 2. Dockerfile
@@ -311,6 +311,16 @@ The application has the following services:
     docker push e880613/product-service:1.0.0
     docker push e880613/store-front:1.0.0
 
+# Deployment
+
+    A Deployment in Kubernetes is a resource that manages a set of pods (containers) and 
+    ensures that the desired state is maintained.
+
+# Service
+
+    A Service in Kubernetes is a stable network endpoint that exposes one or more pods to 
+    internal or external traffic.
+
 # Imperative Deployment 
     
   ## Config
@@ -453,15 +463,27 @@ The application has the following services:
 
   ## Deploy    
 
-      kubectl apply -f ./manifests/config
+      kubectl apply -f ./manifests/config -n dev
 
-      kubectl apply -f ./manifests/rabbitmq
+      kubectl apply -f ./manifests/rabbitmq -n dev
 
-      kubectl apply -f ./manifests/order
+      kubectl apply -f ./manifests/order -n dev
 
-      kubectl apply -f ./manifests/product
+      kubectl apply -f ./manifests/product -n dev 
 
-      kubectl apply -f ./manifests/store-front
+      kubectl apply -f ./manifests/store-front -n dev
+
+
+      kubectl delete -f ./manifests/config -n dev
+
+      kubectl delete -f ./manifests/rabbitmq -n dev
+
+      kubectl delete -f ./manifests/order -n dev
+
+      kubectl delete -f ./manifests/product -n dev 
+
+      kubectl delete -f ./manifests/store-front -n dev
+
 
   ## Port Forward
 
