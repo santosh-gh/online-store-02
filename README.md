@@ -1,10 +1,13 @@
 # Dockerize Microservices and run in Minikube Cluster
+
   #### 1. Docker Desktop
   #### 2. Dockerfile
   #### 3. Docker Image  
   #### 4. Docker Hub
   #### 5. kubectl
   #### 6. minikube
+  #### 7. Imperative Deployment
+  #### 8. Declarative Deployment
 
   GitRepo: https://github.com/santosh-gh/online-store-02
 
@@ -44,95 +47,95 @@ The application has the following services:
 
   ## Version / Help	
 
-    Show version info
-    kubectl version
-    
-    Show help for all commands
-	  kubectl help	
+      Show version info
+      kubectl version
+      
+      Show help for all commands
+      kubectl help	
 
   ## Cluster Info	
 
-    Display cluster details
-    kubectl cluster-info
+      Display cluster details
+      kubectl cluster-info
 
-    List all cluster nodes
-	  kubectl get nodes
+      List all cluster nodes
+      kubectl get nodes
 
-    List all pods in current namespace
-	  kubectl get pods
+      List all pods in current namespace
+      kubectl get pods
 
   ## Deployment	
 
-    Apply configuration from a YAML file
-    kubectl apply -f file.yaml
+      Apply configuration from a YAML file
+      kubectl apply -f file.yaml
 
-    Create a deployment
-	  kubectl create deployment <name> --image=<image>
+      Create a deployment
+      kubectl create deployment <name> --image=<image>
 
-    Delete a pod
-	  kubectl delete pod <name>	
+      Delete a pod
+      kubectl delete pod <name>	
 
   ## Services	
 
-    List services
-    kubectl get services	
+      List services
+      kubectl get services	
 
-    Expose a deployment
-	  kubectl expose deployment <name> --type=LoadBalancer --port=80	
+      Expose a deployment
+      kubectl expose deployment <name> --type=LoadBalancer --port=80	
 
   ## Scaling	
 
-    Scale a deployment
-    kubectl scale deployment <name>	 --replicas=3	
+      Scale a deployment
+      kubectl scale deployment <name>	 --replicas=3	
 
   ## Logs	
 
-    Show logs of a pod
-    kubectl logs <pod-name>		
+      Show logs of a pod
+      kubectl logs <pod-name>		
 
-    Stream logs (follow mode)
-	  kubectl logs  <pod-name> -f	
+      Stream logs (follow mode)
+      kubectl logs  <pod-name> -f	
 
   ## Exec / Debug	
 
-    Open shell inside a pod
-    kubectl exec -it  <pod-name> -- /bin/bash
+      Open shell inside a pod
+      kubectl exec -it  <pod-name> -- /bin/bash
 
-    Show detailed pod info
-	  kubectl describe pod  <pod-name>	
+      Show detailed pod info
+      kubectl describe pod  <pod-name>	
 
   ## Namespaces	
 
-    List namespaces
-    kubectl get namespaces	
+      List namespaces
+      kubectl get namespaces	
 
-    Set current namespace
-    kubectl config set-context --current --namespace=<namespace>	
+      Set current namespace
+      kubectl config set-context --current --namespace=<namespace>	
 
   ## Config
 
-    Show kubeconfig
-    kubectl config view	
+      Show kubeconfig
+      kubectl config view	
 
-    Switch context
-    kubectl config use-context <context>
+      Switch context
+      kubectl config use-context <context>
 
   ## Apply / Delete Resources	
    
-    Create or update resources
-    kubectl apply -f file.yaml	
+      Create or update resources
+      kubectl apply -f file.yaml	
 
-    Delete resources from file
-    kubectl delete -f file.yaml	
+      Delete resources from file
+      kubectl delete -f file.yaml	
 
   ## Port Forwarding	
 
-    Forward local port to pod
-    kubectl port-forward <pod-name> 8080:80	  
+      Forward local port to pod
+      kubectl port-forward <pod-name> 8080:80	  
 
 # Install Minikube
 
-    https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download
+      https://minikube.sigs.k8s.io/docs/start/?arch=%2Fwindows%2Fx86-64%2Fstable%2F.exe+download
 
 # Minikube commands
 
@@ -264,7 +267,7 @@ The application has the following services:
     Clean up Docker images/containers (if using Docker driver).
     docker system prune -a
 
-# Addons:
+# Available Addons:
 
     dashboard – Kubernetes Dashboard
 
@@ -306,13 +309,12 @@ The application has the following services:
     docker push e880613/product-service:1.0.0
     docker push e880613/store-front:1.0.0
 
-# Imperative Deployment
- 
+# Imperative Deployment 
     
   ## Config
 
-    kubectl create configmap rabbitmq-enabled-plugins \
-    --from-literal=rabbitmq_enabled_plugins="[rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0]."    
+      kubectl create configmap rabbitmq-enabled-plugins \
+      --from-literal=rabbitmq_enabled_plugins="[rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0]."    
 
   ## Rabbitmq
 
@@ -322,15 +324,20 @@ The application has the following services:
       --image=mcr.microsoft.com/azurelinux/base/rabbitmq-server:3.13 \
       --replicas=1
 
+      # Set env
+
       kubectl set env deployment/rabbitmq \
       RABBITMQ_DEFAULT_USER=username \
       RABBITMQ_DEFAULT_PASS=password
+
+      # Set resources
 
       kubectl set resources deployment/rabbitmq \
       --requests=cpu=10m,memory=128Mi \
       --limits=cpu=250m,memory=256Mi
 
       # Add ports
+
         kubectl patch deployment rabbitmq --type='json' -p='[
           {"op": "add", "path": "/spec/template/spec/containers/0/ports", "value": [
             {"containerPort": 5672, "name": "rabbitmq-amqp"},
@@ -339,11 +346,13 @@ The application has the following services:
         ]'
 
       # Add nodeSelector
+
       kubectl patch deployment rabbitmq --type='json' -p='[
         {"op": "add", "path": "/spec/template/spec/nodeSelector", "value": {"kubernetes.io/os": "linux"}}
       ]'
 
       # Add volume and mount
+
       kubectl patch deployment rabbitmq --type='json' -p='[
         {"op": "add", "path": "/spec/template/spec/volumes", "value": [
           {
@@ -358,7 +367,6 @@ The application has the following services:
           {"name": "rabbitmq-enabled-plugins", "mountPath": "/etc/rabbitmq/enabled_plugins", "subPath": "enabled_plugins"}
         ]}
       ]'
-
 
     - Service
 
